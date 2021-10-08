@@ -1,18 +1,21 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+     <form action="">
+      <input type="text" placeholder="Enter product...">
+      <button @click="submit()">Submit</button>
+    </form>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 
 export default defineComponent({
   name: 'Home',
-  components: {
-    HelloWorld,
-  },
+   methods: {
+    submit(){
+      this.$router.push({path: '/about'})
+    }
+  }
 });
 </script>

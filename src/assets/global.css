@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+body {
+  font-family: 'Open Sans';
+  background: #ece6d9;
+}
+
+input, select {
+    padding: 6px;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+}
+
+button {
+    color: white;
+    border: 0;
+    background: #42b983;
+    padding: 6px;
+    min-width: 80px;
+    border-radius: 4px;
+    cursor: pointer;
+}
