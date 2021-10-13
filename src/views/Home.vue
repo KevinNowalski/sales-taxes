@@ -1,21 +1,7 @@
 <template>
   <div class="home">
-     <form action="">
-      <input type="text" placeholder="Enter product...">
-      <button @click="submit()">Submit</button>
-    </form>
+    <h1>Sales Taxes Home</h1>
+     <p>The Sales Taxes app takes input for shopping baskets and returns receipts in a format calculating all taxes and totals correctly. When calculating the sales tax, the app will round the value up to the nearest 5 cents</p><br>
+    <router-link to="/basket" class="basket-link"><h2>Go to basket</h2></router-link>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'Home',
-   methods: {
-    submit(){
-      this.$router.push({path: '/about'})
-    }
-  }
-});
-</script>
