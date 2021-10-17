@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
-import Basket from '../views/Basket.vue'
+import Shop from '../views/Shop.vue'
 import NotFound from '../views/NotFound.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -16,9 +16,9 @@ const routes: Array<RouteRecordRaw> = [
     component: About
   },
   {
-    path: '/basket',
-    name: 'Basket',
-    component: Basket
+    path: '/shop',
+    name: 'Shop',
+    component: Shop
   },
   // catchall 404
   {

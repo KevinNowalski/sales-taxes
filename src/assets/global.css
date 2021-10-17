@@ -64,7 +64,7 @@ button {
 }
 
 #itemsAdded{
-    width: 75%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -73,12 +73,12 @@ button {
 }
 
 #selectItem {
-    width: 75%;
+    width: 100%;
     margin: 0 auto;
 }
 
 #quantity {
-    width: 75%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -94,16 +94,16 @@ button {
     text-align: left;
 }
 
-.basket #main {
+.shop #main {
     display: flex;
     flex-wrap: wrap
 }
 
-.basket-link {
+.shop-link {
     text-decoration: none;
 }
 
-.basket-link h2 {
+.shop-link h2 {
     background: #f4f4f4;
     padding: 20px;
     border-radius: 10px;
@@ -113,8 +113,14 @@ button {
     color: #000;
 }
 
+@media only screen and (min-width: 992px) {
+    .receipt{
+        padding-left: 55px
+    }
+}
+
 @media only screen and (max-width: 991px) {
-    .basket #main {
+    .shop #main {
         display: block;
     }
 

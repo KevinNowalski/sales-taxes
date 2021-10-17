@@ -1,12 +1,12 @@
 <template>
-  <div class="basket">
-    <h1>Basket</h1>
+  <div class="shop">
+    <h1>Shop</h1>
     <div id="main">
       <div id="select-quantity">
         <div id="selectItem">
           <h1>Select item:</h1>
           <select name="items" id="items" v-model="selected">
-            <option v-for="item in items" :value="item.val" :key="item.id" @click="addPrice(item.itemPrice)">
+            <option v-for="item in items" :value="item.val" :key="item.id" @click="addInfo(item.itemPrice,item.itemType,item.itemSource)">
               {{ item.val }}
             </option>
           </select>
@@ -40,8 +40,8 @@
               {{itemAdded.itemName}}: &nbsp;{{itemAdded.selectedTotal}}<br>
             </div>
           </div>
-          <!-- Sales Taxes: {{ salesTax }}<br> -->
-          Total: &nbsp;{{ totalCost }}
+          Sales Taxes: &nbsp;{{ salesTax }}<br>
+          Total: &nbsp;{{ grandTotal }}
         </div>
       </div>
     </div>
@@ -52,45 +52,51 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Basket',
+  name: 'Shop',
    data() {
     return {
-      // book: 12.49,
-      // musicCD: 16.49,
-      // chocolateBar: 0.85,
-      // itemPrice: '' as any | number | string,
-      salesTax: '' as any | number | string,
-      totalCost: '' as any | number | string,
-      // totalItemsCost: '' as any | number | string,
       itemsAdded: [] as any,
       selected: 'Book',
       qty: '' as any | number | string,
       selectedPrice: 12.49,
+      itemType: '' as any | number | string,
+      itemSource: '' as any | number | string,
       selectedTotal: '' as any | number | string,
+      salesTax: '' as any | number | string,
+      importTax: '' as any | number | string,
+      totalCost: '' as any | number | string,
+      grandTotal: '' as any | number | string,
       items: {
-        1: {id: 1, val: 'Book', itemPrice: 12.49},
-        2: {id: 2, val: 'Music CD', itemPrice: 16.49},
-        3: {id: 3, val: 'Chocolate Bar', itemPrice: 0.85},
+        0: {id: 1, val: 'War and Peace', itemPrice: 10.79, itemType: 'Book', itemSource: "Domestic"},
+        1: {id: 2, val: 'Drogas Wave', itemPrice: 16.59, itemType: 'Music CD', itemSource: "Domestic"},
+        2: {id: 3, val: 'Theo Dark Chocolate', itemPrice: 2.59, itemType: 'Food', itemSource: "Domestic"},
+        3: {id: 4, val: 'Tension Headache Relief', itemPrice: 2.49, itemType: 'Medical', itemSource: "Domestic"},
+        4: {id: 5, val: 'Etokki Fight Stick', itemPrice: 209.95, itemType: 'Video Games', itemSource: "Import"},
       },
       showReceipt: false
     }
   },
   methods: {
-    addPrice(addPrice: number){
+    addInfo(addPrice: any,addType: any,addSource: any){
       this.selectedPrice = addPrice
+      this.itemType = addType
+      this.itemSource = addSource
     },
     addItem(){
       this.showReceipt = false;
+      // If array empty add item
       if(this.itemsAdded.length === 0){
-        this.itemsAdded.push({itemName: this.selected, qtyAdded: this.qty, priceAdded: this.selectedPrice, totalAdded: this.selectedTotal})
+        this.itemsAdded.push({itemName: this.selected, qtyAdded: this.qty, priceAdded: this.selectedPrice, totalAdded: this.selectedTotal, itemTypeAdded: this.itemType, itemSourceAdded: this.itemSource})
         console.log('Items '+JSON.stringify(this.itemsAdded))
       }else{
         var result = this.itemsAdded.find((e: { itemName: any; }) => e.itemName === this.selected)
+        // If item in array add quantity
         if(result){
           result.qtyAdded = +result.qtyAdded + +this.qty;
+        // Else if item not in array add item
         }else{
         if(!this.itemsAdded.find((e: { itemName: any; }) => e.itemName === this.selected)){
-          this.itemsAdded.push({itemName: this.selected, qtyAdded: this.qty, priceAdded: this.selectedPrice, totalAdded: this.selectedTotal})
+          this.itemsAdded.push({itemName: this.selected, qtyAdded: this.qty, priceAdded: this.selectedPrice, totalAdded: this.selectedTotal, itemTypeAdded: this.itemType, itemSourceAdded: this.itemSource})
           console.log('Items '+JSON.stringify(this.itemsAdded))
           }
         }
@@ -99,13 +105,39 @@ export default defineComponent({
     calculate(){
       this.showReceipt = true;
       this.itemsAdded.forEach((itemAdded: any) => {
-        itemAdded.selectedTotal = itemAdded.qtyAdded * itemAdded.priceAdded
+      // Calculate item cost with quantity
+        itemAdded.selectedTotal = (itemAdded.qtyAdded * itemAdded.priceAdded).toFixed(2);
       })
-      this.totalCost = 0
+
+      this.salesTax = 0;
       this.itemsAdded.forEach((itemAdded: any) => {
+        var type = String(itemAdded.itemTypeAdded)
+        if(type !== "Book" && type !== "Music CD" && type !== "Medical"){
+          // Calculate item sales tax
+          this.salesTax = (.1 * itemAdded.selectedTotal).toFixed(2);
+        }
+        console.log("The sales tax is "+this.salesTax)
+      })
+
+      this.importTax = 0;
+      this.itemsAdded.forEach((itemAdded: any) => {
+        var source = String(itemAdded.itemSourceAdded)
+        if(source !== "Domestic"){
+          // Calculate item import tax
+          this.importTax = (.05 * itemAdded.selectedTotal).toFixed(2);
+          console.log('Import tax '+ this.importTax)
+        }
+      })
+      
+      this.totalCost = 0;
+      this.itemsAdded.forEach((itemAdded: any) => {
+      // Calculate item total cost
         this.totalCost = (+itemAdded.selectedTotal + +this.totalCost).toFixed(2);
       })
-      console.log('Items '+JSON.stringify(this.itemsAdded))
+
+      // Calculate the grand total
+      this.grandTotal = (+this.salesTax + +this.totalCost + +this.importTax).toFixed(2);
+
     }
   }
 });
