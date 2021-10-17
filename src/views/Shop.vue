@@ -22,7 +22,7 @@
             <div v-if="itemsAdded.length !== 0">
               <h3>Items Added:</h3>
               <div v-for="item in itemsAdded" :key="item.itemName" class="items-added">
-                Item: {{item.itemName}} &nbsp; &nbsp; Quantity: {{item.qtyAdded}} &nbsp; &nbsp; Price: {{item.priceAdded}} <br>
+                {{item.qtyAdded}} {{item.itemName}} at {{item.priceAdded}}<br>
               </div>
             </div>
             <br><br>
@@ -33,7 +33,13 @@
         <h1>Receipt:</h1>
         <div v-if="itemsAdded.length !== 0" class="receipt-detail">
           <div v-for="(itemAdded, index) in itemsAdded" :key="index">
-            <div v-if ="itemAdded.qtyAdded > 1" >
+            <div v-if="itemAdded.itemSourceAdded === 'Import' && itemAdded.qtyAdded > 1">
+              Imported {{itemAdded.itemName}}: &nbsp;{{itemAdded.selectedTotal}} ({{itemAdded.qtyAdded}} @ {{itemAdded.priceAdded}})<br>
+            </div>
+            <div v-else-if="itemAdded.itemSourceAdded === 'Import'">
+              Imported {{itemAdded.itemName}}: &nbsp;{{itemAdded.selectedTotal}}<br>
+            </div>
+            <div v-else-if="itemAdded.qtyAdded > 1">
               {{itemAdded.itemName}}: &nbsp;{{itemAdded.selectedTotal}} ({{itemAdded.qtyAdded}} @ {{itemAdded.priceAdded}})<br>
             </div>
             <div v-else>
@@ -67,11 +73,13 @@ export default defineComponent({
       totalCost: '' as any | number | string,
       grandTotal: '' as any | number | string,
       items: {
-        0: {id: 1, val: 'War and Peace', itemPrice: 10.79, itemType: 'Book', itemSource: "Domestic"},
-        1: {id: 2, val: 'Drogas Wave', itemPrice: 16.59, itemType: 'Music CD', itemSource: "Domestic"},
-        2: {id: 3, val: 'Theo Dark Chocolate', itemPrice: 2.59, itemType: 'Food', itemSource: "Domestic"},
-        3: {id: 4, val: 'Tension Headache Relief', itemPrice: 2.49, itemType: 'Medical', itemSource: "Domestic"},
-        4: {id: 5, val: 'Etokki Fight Stick', itemPrice: 209.95, itemType: 'Video Games', itemSource: "Import"},
+        1: {id: 1, val: 'War and Peace', itemPrice: 10.79, itemType: 'Book', itemSource: "Domestic"},
+        2: {id: 2, val: 'Drogas Wave', itemPrice: 16.59, itemType: 'Music CD', itemSource: "Domestic"},
+        3: {id: 3, val: 'Theo Dark Chocolate', itemPrice: 2.59, itemType: 'Food', itemSource: "Domestic"},
+        4: {id: 4, val: 'Tension Headache Relief', itemPrice: 2.49, itemType: 'Medical', itemSource: "Domestic"},
+        5: {id: 5, val: 'Etokki Fight Stick', itemPrice: 209.95, itemType: 'Video Games', itemSource: "Import"},
+        6: {id: 5, val: 'Babolat Pure Drive', itemPrice: 229, itemType: 'Tennis Racquet', itemSource: "Domestic"},
+        7: {id: 7, val: 'USB-C Cable', itemPrice: 5.60, itemType: 'Adapter', itemSource: "Domestic"},
       },
       showReceipt: false
     }
@@ -112,9 +120,9 @@ export default defineComponent({
       this.salesTax = 0;
       this.itemsAdded.forEach((itemAdded: any) => {
         var type = String(itemAdded.itemTypeAdded)
-        if(type !== "Book" && type !== "Music CD" && type !== "Medical"){
+        if(type !== "Book" && type !== "Food" && type !== "Medical"){
           // Calculate item sales tax
-          this.salesTax = (.1 * itemAdded.selectedTotal).toFixed(2);
+          this.salesTax = Math.round((.1 * itemAdded.selectedTotal) * 5) / 5;
         }
         console.log("The sales tax is "+this.salesTax)
       })
